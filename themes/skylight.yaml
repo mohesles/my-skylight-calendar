@@ -1,12 +1,41 @@
 Skylight:
-  # Imports the Ovo font from Google
+  # This file defines variables you can use in the dashboard and package YAML as `var(--variable-name)` values
+  # ex:
+  # my-custom-value: "Something good"
+  # 
+  ### in a card_mod.style section
+  # card_mod:
+  #   style: |
+  #     .title-text {
+  #       content: "var(--my-custom-value)"
+  #     }
+  #
+  ### !!REMEMBER!!
+  # After making changes to this file, you must do one of the following for the changes to take effect (from fast to slow):
+  # 1. Invoke the `frontend.reload_themes` service (from Developer tools -> Actions)
+  # 2. Invoke the `All YAML configuration` reload (from Developer tools -> YAML)
+  # 3. Reload Home Assistant (without restart from Settings -> System -> Power -> Quick Reload)
+  # 4. Restart Home Assistant (from Settings -> System -> Power -> Restart Home Assistant)
+  
+  #### Font Variables
+  # --- 1. Load the Font (via card-mod) from Google ---
   card-mod-theme: Skylight
   card-mod-root-yaml: |
     .: |
       @import url('https://fonts.googleapis.com/css2?family=Ovo&display=swap');
   
-  # Applies the font
+  # --- 2. Apply the Font (Standard Home Assistant Variables) ---
+  # Sets the primary font value as "Ovo", falling back to "serif" if Ovo isn't available
   primary-font-family: "Ovo, serif"
+
+  # define font values for for the majority of the UI (titles, sidebar, etc.) using a naming convention:
+  # ha-card-[class]-font-family
+
+  # Sets the font specifically for card headers
+  ha-card-header-font-family: "var(--primary-font-family)"
+  #ha-card-body-font-family: "var(--primary-font-family) !important"
+
+  # Legacy "Paper" variables (Polymer elements) - ensures deep UI elements match
   paper-font-common-base_-_font-family: "var(--primary-font-family)"
   paper-font-common-code_-_font-family: "var(--primary-font-family)"
   paper-font-body1_-_font-family: "var(--primary-font-family)"
@@ -14,4 +43,12 @@ Skylight:
   paper-font-headline_-_font-family: "var(--primary-font-family)"
   paper-font-caption_-_font-family: "var(--primary-font-family)"
   paper-font-title_-_font-family: "var(--primary-font-family)"
-  ha-card-header-font-family: "var(--primary-font-family)"
+
+  #### Custom family member default colors
+  alice-default-primary-color: "#fb8072"
+  bob-default-primary-color: "#fdbf6f"
+  charlie-default-primary-color: "#a6cee3"
+  daisy-default-primary-color: "#cab2d6"
+  family-default-primary-color: "#4A90E2"
+  birthdays-default-primary-color: "#33a02c"
+  holidays-default-primary-color: "#ff7f00"

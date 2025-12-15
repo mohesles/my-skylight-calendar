@@ -98,7 +98,7 @@ sections:
             styles: |
               .bubble-button-background {
                 opacity: 1 !important;
-                background-color: ${hass.states['input_text.alice_calendar_filter'].state === '.*' ? 'light-grey' : '#fb8072'} !important;
+                background-color: ${hass.states['input_text.alice_calendar_filter'].state === '.*' ? 'light-grey' : 'var(--alice-default-primary-color)'} !important;
               }
           - type: custom:bubble-card
             card_type: button
@@ -112,7 +112,7 @@ sections:
             styles: |
               .bubble-button-background {
                 opacity: 1 !important;
-                background-color: ${hass.states['input_text.bob_calendar_filter'].state === '.*' ? 'light-grey' : '#fdbf6f'} !important;
+                background-color: ${hass.states['input_text.bob_calendar_filter'].state === '.*' ? 'light-grey' : 'var(--bob-default-primary-color)'} !important;
               }
           - type: custom:bubble-card
             card_type: button
@@ -126,7 +126,7 @@ sections:
             styles: |
               .bubble-button-background {
                 opacity: 1 !important;
-                background-color: ${hass.states['input_text.charlie_calendar_filter'].state === '.*' ? 'light-grey' : '#a6cee3'} !important;
+                background-color: ${hass.states['input_text.charlie_calendar_filter'].state === '.*' ? 'light-grey' : 'var(--charlie-default-primary-color)'} !important;
               }
           - type: custom:bubble-card
             card_type: button
@@ -140,7 +140,7 @@ sections:
             styles: |
               .bubble-button-background {
                 opacity: 1 !important;
-                background-color: ${hass.states['input_text.daisy_calendar_filter'].state === '.*' ? 'light-grey' : '#cab2d6'} !important;
+                background-color: ${hass.states['input_text.daisy_calendar_filter'].state === '.*' ? 'light-grey' : 'var(--daisy-default-primary-color)'} !important;
               }
           - type: custom:bubble-card
             card_type: button
@@ -265,31 +265,31 @@ sections:
             # --- MAP CALENDARS HERE ---
             - entity: calendar.alice
               name: Alice
-              color: "#fb8072"
+              color: "var(--alice-default-primary-color)"
               filter: ${ ALICAL }
             - entity: calendar.bob
               name: Bob
-              color: "#fdbf6f"
+              color: "var(--bob-default-primary-color)"
               filter: ${ BOBCAL }
             - entity: calendar.charlie
               name: Charlie
-              color: "#a6cee3"
+              color: "var(--charlie-default-primary-color)"
               filter: ${ CHACAL }
             - entity: calendar.daisy
               name: Daisy
-              color: "#cab2d6"
+              color: "var(--daisy-default-primary-color)"
               filter: ${ DAICAL }
             - entity: calendar.family
               name: Family
-              color: "#4A90E2"
+              color: "var(--family-default-primary-color)"
               filter: ${ FAMCAL }
             - entity: calendar.birthdays
               name: Birthdays
-              color: "#33a02c"
+              color: "var(--birthdays-default-primary-color)"
               filter: ${ BIRCAL }
             - entity: calendar.holidays # <--- Check this entity ID after adding integration
               name: Holidays
-              color: "#ff7f00"
+              color: "var(--holidays-default-primary-color)"
               filter: ${ HOLCAL }
           days: ${ DAYS }
           startingDayOffset: 0
@@ -347,11 +347,11 @@ sections:
             styles: |
               .bubble-button-card-container {
                 background: 
-                ${hass.states['input_select.calendar_select'].state == 'Alice' ? '#fb8072' 
-                : hass.states['input_select.calendar_select'].state == 'Bob' ? '#fdbf6f' 
-                : hass.states['input_select.calendar_select'].state == 'Charlie' ? '#a6cee3' 
-                : hass.states['input_select.calendar_select'].state == 'Daisy' ? '#cab2d6' 
-                : hass.states['input_select.calendar_select'].state == 'Family' ? '#4A90E2' 
+                ${hass.states['input_select.calendar_select'].state == 'Alice' ? 'var(--alice-default-primary-color)' 
+                : hass.states['input_select.calendar_select'].state == 'Bob' ? 'var(--bob-default-primary-color)' 
+                : hass.states['input_select.calendar_select'].state == 'Charlie' ? 'var(--charlie-default-primary-color)' 
+                : hass.states['input_select.calendar_select'].state == 'Daisy' ? 'var(--daisy-default-primary-color)' 
+                : hass.states['input_select.calendar_select'].state == 'Family' ? 'var(--family-default-primary-color)' 
                 : 'gray'} !important;
               }
           - type: vertical-stack
@@ -398,11 +398,11 @@ sections:
                   card:
                     - background-color: |
                         [[[
-                          if (states['input_select.calendar_select'].state == 'Alice') return "#fb8072";
-                          if (states['input_select.calendar_select'].state == 'Bob') return "#fdbf6f";
-                          if (states['input_select.calendar_select'].state == 'Charlie') return "#a6cee3";
-                          if (states['input_select.calendar_select'].state == 'Daisy') return "#cab2d6";
-                          if (states['input_select.calendar_select'].state == 'Family') return "#4A90E2";
+                          if (states['input_select.calendar_select'].state == 'Alice') return "var(--alice-default-primary-color)";
+                          if (states['input_select.calendar_select'].state == 'Bob') return "var(--bob-default-primary-color)";
+                          if (states['input_select.calendar_select'].state == 'Charlie') return "var(--charlie-default-primary-color)";
+                          if (states['input_select.calendar_select'].state == 'Daisy') return "var(--daisy-default-primary-color)";
+                          if (states['input_select.calendar_select'].state == 'Family') return "var(--family-default-primary-color)";
                           return "gray";
                         ]]]                
 cards: []

@@ -93,6 +93,10 @@ You must have [HACS](https://hacs.xyz/) installed. Please install the following 
 * `layout-card` (Required for the Sections view)
 * `button-card` (Required for the popup to add event)
 
+*Note: In Settings → Devices & Services, make sure Browser Mod appears as an Integration (tile) and not only under HACS. 
+If it isn’t there, click Add Integration → Browser Mod and finish the flow, then restart HA.
+Installing via HACS only downloads files; you must add the integration so HA registers its actions/entities.
+
 ### 2. The Backend (The Brains)
 
 1. Open your `configuration.yaml` file in Home Assistant.
@@ -105,33 +109,32 @@ You must have [HACS](https://hacs.xyz/) installed. Please install the following 
 
 3. Create a folder named `packages` in your HA config directory (if you don't have one).
 4. Download [packages/family_calendar.yaml](packages/family_calendar.yaml) from this repo.
-5. Place the file inside your `packages/` folder.
-6. **Restart Home Assistant**.
+5. Search for string [ #<--- UPDATE THIS ENTITY]  and update the calendar entity ID to match your environment. Check section 3 for more details.
+6. Place the file inside your `packages/` folder.
+7. **Restart Home Assistant**.
 
 ### 3. The Calendars
 
 You can use **Google Calendars** or **Local Calendars**.
 
-#### Option A: Local Calendar (Easiest)
+#### Option A: Reuse Calendar Names (Easiest)
 
-Note this is untested since I use Google Calendars exclusively
 
 1. Go to **Settings > Devices & Services**.
 2. Add the **Local Calendar** integration.
-3. Create calendars named exactly: `Alice`, `Bob`, `Charlie`, `Daisy`, `Family`.
+3. Create calendars named exactly: `calendar1`, `calendar2`, `calendar3`, `calendar4`, `Family`.
     * *If you use these names, the code works out of the box!*
 
-#### Option B: Google Calendar
+#### Option B: Custom Calendar
 
-1. Open `packages/family_calendar.yaml`.
-2. Scroll to the `add_google_calendar_event` script.
-3. Update the `calendar_map` to point to your real Google entities:
+1. Go to **Settings > Devices & Services**.
+2. Add the **Local Calendar** integration. or **Google Calendar**.
+3. Navigate to **Configuration > Integrations > Local Calendar** or **Google Calendar** and select "Add Entry"
+4. For each created entry, get the entity ID for updating the dashboard.yaml file.
+5. Open `dashboard.yaml`.
+6. Search for `# <--- UPDATE THIS ENTITY`.
+7. Update the entity ID matching your environment
 
-    ```yaml
-    calendar_map:
-      "Alice": "calendar.alice_gmail_com"
-      "Bob": "calendar.bob_work_account"
-    ```
 
 #### Setting up Holidays
 
@@ -143,12 +146,11 @@ Since Home Assistant updates, Holidays are now added via UI:
 
 ### 4. The Dashboard (The Look)
 
-1. Create a new Dashboard View (Set View Type to **Sections**).
-2. Copy the code from [dashboard.yaml](dashboard.yaml).
-3. **Customize:**
-   * **Search & Replace:** Replace `person.alice` with your actual family member entities.
-   * **Weather:** Replace `weather.home` with your weather provider.
-   * **Background:** Update the image URL at the bottom of the yaml.
+1. Go to **Settings > Dashboard**
+2. Click on **Add Dashboard** (Select option "New Dashboard from Scratch" make sure to select "Add to sidebar").
+3. On the left menu, select the new created dashboard and click on the pencil icon to edit it.
+5. Select the 3 dots icon and select "Raw configurator editor".
+6. Copy and paste the code from [dashboard.yaml](dashboard.yaml).
 
 ### Step 5: The Theme (Optional)
 
@@ -163,8 +165,9 @@ To get the specific font look (Ovo):
 
 2. Create a folder named `themes` in your config directory.
 3. Download [themes/skylight.yaml](themes/skylight.yaml) and place it in that folder.
-4. Restart Home Assistant.
-5. Go to your Profile (User Icon bottom left) and change **Theme** to `Skylight`.
+4. Use File Editor and upload calbackgrd.png to /www/ folder, that translates internally to /local on the dashboard.
+5. Restart Home Assistant.
+6. Go to your Profile (User Icon bottom left) and change **Theme** to `Skylight`.
 NOTE: The theme is not comprehensive, so keep that in mind
 
 ---

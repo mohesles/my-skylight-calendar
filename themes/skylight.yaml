@@ -66,10 +66,10 @@ Skylight:
   
   #### Custom family member default colors
   #### default calendar colors - format: [family-member.name]-default-primary-color: "[color value/name]"
-  alice-default-primary-color: "#fb8072"
-  bob-default-primary-color: "#fdbf6f"
-  charlie-default-primary-color: "#a6cee3"
-  daisy-default-primary-color: "#cab2d6"
+  calendar1-default-primary-color: "#fb8072"
+  calendar2-default-primary-color: "#fdbf6f"
+  calendar3-default-primary-color: "#a6cee3"
+  calendar4-default-primary-color: "#cab2d6"
   family-default-primary-color: "#4A90E2"
   birthdays-default-primary-color: "#33a02c"
   holidays-default-primary-color: "#ff7f00"

@@ -254,7 +254,7 @@ views:
                   if (calendarView === 'Today') return 'today';
                   if (calendarView === 'Tomorrow') return 'tomorrow';
                   // Fallback
-                  return 'monday'; # <--- UPDATE THIS IF NEEDED, valid values are: monday, tuesday, wednesday, thursday, friday, saturday, sunday
+                  return 'monday'; // <--- UPDATE THIS IF NEEDED, valid values are: monday, tuesday, wednesday, thursday, friday, saturday, sunday
                 })()
               DAYS: |
                 (() => {

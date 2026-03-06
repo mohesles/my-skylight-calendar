@@ -3,13 +3,16 @@
 # ==============================================================================
 #  INSTRUCTIONS:
 #  1. Place this file in your /config/packages/ folder.
-#  2. Ensure your configuration.yaml has: 
+#  2. Ensure your configuration.yaml has:
 #     homeassistant:
 #       packages: !include_dir_named packages
 #  3. RESTART Home Assistant.
 # ==============================================================================
 
 # 1. HELPERS (The Variables)
+# To add a new calendar: copy a filter entry below and its matching toggle
+# script, then update dashboard.yaml to reference it.
+# To remove a calendar: delete its filter entry and toggle script.
 input_text:
   # Filter Toggles (RegEx: .* = Show, ^$ = Hide)
   calendar1_calendar_filter:
@@ -34,26 +37,7 @@ input_text:
     name: Holidays Filter
     initial: ".*"
 
-  # Event Form Data
-  calendar_event_title:
-    name: Event Title
-    icon: mdi:format-title
-  calendar_event_description:
-    name: Event Description
-    icon: mdi:text
-
 input_select:
-  # The dropdown list for "Who is this event for?"
-  calendar_select:
-    name: Select Calendar
-    options:
-      - calendar1
-      - calendar2
-      - calendar3
-      - calendar4
-      - Family
-    icon: mdi:calendar-check
-  
   # The View selector (Week, Month, etc)
   calendar_view:
     name: Calendar View
@@ -64,29 +48,6 @@ input_select:
       - Biweek
       - Month
     initial: Week
-
-input_datetime:
-  # Event start/end times
-  calendar_event_start:
-    has_date: true
-    has_time: true
-  calendar_event_end:
-    has_date: true
-    has_time: true
-  calendar_day_event_start:
-    has_date: true
-    has_time: false
-  calendar_day_event_end:
-    has_date: true
-    has_time: false
-
-input_boolean:
-  # UI Toggles
-  calendar_all_day_event:
-    name: All Day Event
-    icon: mdi:calendar-clock
-  family_calendar_show:
-    name: Show Family Calendar
 
 # 2. SCRIPTS (The Logic)
 script:
@@ -153,67 +114,3 @@ script:
           entity_id: input_text.holidays_calendar_filter
         data:
           value: "{% if is_state('input_text.holidays_calendar_filter', '.*') %}^${% else %}.*{% endif %}"
-
-  # --- Add Event Logic ---
-  add_google_calendar_event:
-    alias: Process Add Calendar Event
-    sequence:
-      - variables:
-          # ====================================================================
-          # CONFIGURATION: ENTITY MAPPING
-          # Map the Dropdown Name (Left) to your Entity ID (Right).
-          # ====================================================================
-          calendar_map:
-            "calendar1": "calendar.calendar1" #<--- UPDATE THIS ENTITY
-            "calendar2": "calendar.calendar2" #<--- UPDATE THIS ENTITY
-            "calendar3": "calendar.calendar3" #<--- UPDATE THIS ENTITY
-            "calendar4": "calendar.calendar4" #<--- UPDATE THIS ENTITY
-            "Family": "calendar.family" #<--- UPDATE THIS ENTITY
-          
-          # Selects the entity based on the map above
-          target_calendar: "{{ calendar_map.get(states('input_select.calendar_select'), 'calendar.family') }}" #<--- UPDATE THIS ENTITY
-
-      - choose:
-          # Scenario A: All Day Event
-          - conditions:
-              - condition: state
-                entity_id: input_boolean.calendar_all_day_event
-                state: "on"
-            sequence:
-              - action: calendar.create_event
-                target:
-                  entity_id: "{{ target_calendar }}"
-                data:
-                  summary: "{{ states('input_text.calendar_event_title') }}"
-                  description: "{{ states('input_text.calendar_event_description') }}"
-                  start_date: "{{ states('input_datetime.calendar_day_event_start') }}"
-                  end_date: "{{ states('input_datetime.calendar_day_event_end') }}"
-          
-          # Scenario B: Timed Event
-          - conditions:
-              - condition: state
-                entity_id: input_boolean.calendar_all_day_event
-                state: "off"
-            sequence:
-              - action: calendar.create_event
-                target:
-                  entity_id: "{{ target_calendar }}"
-                data:
-                  summary: "{{ states('input_text.calendar_event_title') }}"
-                  description: "{{ states('input_text.calendar_event_description') }}"
-                  start_date_time: "{{ states('input_datetime.calendar_event_start') }}"
-                  end_date_time: "{{ states('input_datetime.calendar_event_end') }}"
-
-      # Cleanup and Close
-      - action: input_text.set_value
-        target:
-          entity_id: input_text.calendar_event_title
-        data:
-          value: ""
-      - action: input_text.set_value
-        target:
-          entity_id: input_text.calendar_event_description
-        data:
-          value: ""
-      - action: browser_mod.close_popup
-        data: {}

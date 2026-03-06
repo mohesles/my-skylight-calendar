@@ -69,8 +69,10 @@ The hardware I originally used I chose based on what I mentioned above plus with
 
 * **Family-wide & Individual Views:** Toggle specific family members' calendars on/off.
 * **Two-way Sync:** Edit events on the screen or on our phones (Google Calendar).
-* **"Add Event" Popup:** A custom UI to add events to specific calendars directly from the screen.
+* **Built-in Event Management:** Create, edit, and delete events directly from the calendar (click "+" on a day or click an existing event).
+* **Multi-view:** Switch between Today, Tomorrow, Week, Biweek, and Month views.
 * **Weather & Date:** Beautiful, glanceable header.
+* **Locale Support:** Set `locale` to display day/month names in your language.
 * **Responsive:** Automatically adjusts day-count based on screen width (Mobile vs Desktop).
 
 ---
@@ -83,19 +85,12 @@ The hardware I originally used I chose based on what I mentioned above plus with
 
 You must have [HACS](https://hacs.xyz/) installed. Please install the following **Frontend** integrations:
 
-* `week-planner-card`
+* `week-planner-card` (v1.15.0+ recommended — includes built-in event creation/editing)
 * `bubble-card`
 * `config-template-card`
 * `card-mod`
 * `better-moment-card`
 * `weather-card`
-* `browser_mod` (Required for the popups to work)
-* `layout-card` (Required for the Sections view)
-* `button-card` (Required for the popup to add event)
-
-*Note: In Settings → Devices & Services, make sure Browser Mod appears as an Integration (tile) and not only under HACS. 
-If it isn’t there, click Add Integration → Browser Mod and finish the flow, then restart HA.
-Installing via HACS only downloads files; you must add the integration so HA registers its actions/entities.
 
 ### 2. The Backend (The Brains)
 
@@ -136,6 +131,21 @@ You can use **Google Calendars** or **Local Calendars**.
 7. Update the entity ID matching your environment
 
 
+#### Customizing the Number of Calendars
+
+By default, the setup includes 4 personal calendars + Family + Birthdays + Holidays. To add or remove calendars:
+
+1. **In `family_calendar.yaml`:** Add/remove a filter entry under `input_text:` and a toggle script under `script:`. Follow the existing pattern (e.g., copy `calendar4_calendar_filter` and its toggle script, rename to `calendar5_calendar_filter`).
+
+2. **In `dashboard.yaml`:**
+   - Add/remove a bubble-card button in the controls section
+   - Add/remove the calendar entity + filter variable in the `config-template-card`
+   - Add/remove the calendar entry under the `week-planner-card` calendars list
+
+3. **In `skylight.yaml` (theme):** Add a color variable for the new calendar (e.g., `calendar5-default-primary-color`).
+
+4. **Restart Home Assistant** after modifying `family_calendar.yaml`.
+
 #### Setting up Holidays
 
 Since Home Assistant updates, Holidays are now added via UI:
@@ -151,6 +161,7 @@ Since Home Assistant updates, Holidays are now added via UI:
 3. On the left menu, select the new created dashboard and click on the pencil icon to edit it.
 5. Select the 3 dots icon and select "Raw configurator editor".
 6. Copy and paste the code from [dashboard.yaml](dashboard.yaml).
+7. To change the language, find `locale: en` and replace with your locale code (e.g., `fr`, `de`, `es`, `nl`). This translates day and month names automatically.
 
 ### Step 5: The Theme (Optional)
 
@@ -181,20 +192,9 @@ The `week-planner-card` does not natively support hiding specific calendars on t
 * When you click a person's button, it toggles their filter between `.*` (Show everything) and `^$` (Show nothing).
 * `config-template-card` injects these variables into the calendar card dynamically.
 
-### Event Creation Script
+### Event Creation
 
-The "Add Event" popup uses a single script that handles logic for multiple people and event types (All Day vs Timed).
-
-```yaml
-# Simplified Logic Example
-target_calendar: "{{ calendar_map.get(states('input_select.calendar_select')) }}"
-
-choose:
-  - conditions: "All Day Event is ON"
-    action: calendar.create_event (start_date, end_date)
-  - conditions: "All Day Event is OFF"
-    action: calendar.create_event (start_date_time, end_date_time)
-```
+Event creation, editing, and deletion are handled directly by the `week-planner-card` (v1.15.0+). Click the "+" button on any day cell to create a new event, or click an existing event to edit or delete it. The `defaultCalendar` option in the card config sets which calendar is pre-selected for new events.
 
 ## NOTES
 

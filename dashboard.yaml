@@ -159,7 +159,6 @@ views:
                     opacity: 1 !important;
                     background-color: ${hass.states['input_text.family_calendar_filter'].state === '.*' ? 'light-grey' : '#4A90E2'} !important;
                   }
-                entity: input_boolean.family_calendar_show
               - type: custom:bubble-card
                 card_type: button
                 button_type: name
@@ -193,29 +192,6 @@ views:
             grid_options:
               columns: 45
               rows: auto
-          - type: markdown
-            content: " "
-            grid_options:
-              columns: 3
-              rows: auto
-          - type: custom:bubble-card
-            card_type: button
-            button_type: name
-            card_layout: large
-            name: Add Event
-            icon: mdi:calendar-plus
-            tap_action:
-              action: navigate
-              navigation_path: "#addcalendarevent"
-            styles: |
-              * { font-size: 1.05em !important; }
-              ha-card { --bubble-main-background-color: #393745 !important; width: 300px; }    
-              .bubble-icon { --mdc-icon-size: 30px !important; color: snow !important; opacity: 1; }
-              .bubble-icon-container { background: #393745 !important; display: flex; }
-              .bubble-name { color: snow !important; opacity: 1; display: flex; line-height: 18px; flex-direction: row; justify-content: center; flex-grow: 1; margin: 0 40px 0 0; pointer-events: none; position: relative; overflow: hidden; }
-            grid_options:
-              columns: 10
-              rows: 1
           - type: custom:bubble-card
             card_type: select
             entity: input_select.calendar_view
@@ -268,6 +244,7 @@ views:
                 })()
             card:
               type: custom:week-planner-card
+              defaultCalendar: calendar.family # <--- UPDATE THIS ENTITY (used for built-in event creation)
               calendars:
                 # --- MAP CALENDARS HERE ---
                 - entity: calendar.calendar1 # <--- UPDATE THIS ENTITY
@@ -545,80 +522,6 @@ views:
               showDescription: false
         column_span: 10
       # --- End CALENDAR SECTION (Week Planner Card) ---
-      # --- START POPUP SECTION (Hidden) ---
-      - type: grid
-        cards:
-          - type: vertical-stack
-            cards:
-              - type: custom:bubble-card
-                card_type: pop-up
-                hash: "#addcalendarevent"
-                button_type: name
-                name: Add Calendar Event
-                icon: mdi:calendar-plus
-                show_icon: true
-                show_name: true
-                styles: |
-                  .bubble-button-card-container {
-                    background: 
-                    ${hass.states['input_select.calendar_select'].state == 'calendar1' ? 'var(--calendar1-default-primary-color)' 
-                    : hass.states['input_select.calendar_select'].state == 'calendar2' ? 'var(--calendar2-default-primary-color)' 
-                    : hass.states['input_select.calendar_select'].state == 'calendar3' ? 'var(--calendar3-default-primary-color)' 
-                    : hass.states['input_select.calendar_select'].state == 'calendar4' ? 'var(--calendar4-default-primary-color)' 
-                    : hass.states['input_select.calendar_select'].state == 'Family' ? 'var(--family-default-primary-color)' 
-                    : 'gray'} !important;
-                  }
-              - type: vertical-stack
-                cards:
-                  - type: entities
-                    entities:
-                      - entity: input_select.calendar_select
-                      - entity: input_text.calendar_event_title
-                        name: Event Title
-                      - entity: input_text.calendar_event_description
-                        name: Event Description
-                      - entity: input_boolean.calendar_all_day_event
-                        name: All Day Event
-                    title: Add Calendar Event
-                    state_color: false
-                  - type: conditional
-                    conditions:
-                      - entity: input_boolean.calendar_all_day_event
-                        state: "off"
-                    card:
-                      type: entities
-                      entities:
-                        - entity: input_datetime.calendar_event_start
-                          name: Start Time
-                        - entity: input_datetime.calendar_event_end
-                          name: End Time
-                  - type: conditional
-                    conditions:
-                      - entity: input_boolean.calendar_all_day_event
-                        state: "on"
-                    card:
-                      type: entities
-                      entities:
-                        - entity: input_datetime.calendar_day_event_start
-                          name: Event Start Date
-                        - entity: input_datetime.calendar_day_event_end
-                          name: Event End Date
-                  - type: custom:button-card
-                    name: Add Event to Calendar
-                    tap_action:
-                      action: call-service
-                      service: script.add_google_calendar_event
-                    styles:
-                      card:
-                        - background-color: |
-                            [[[
-                              if (states['input_select.calendar_select'].state == 'calendar1') return "var(--calendar1-default-primary-color)";
-                              if (states['input_select.calendar_select'].state == 'calendar2') return "var(--calendar2-default-primary-color)";
-                              if (states['input_select.calendar_select'].state == 'calendar3') return "var(--calendar3-default-primary-color)";
-                              if (states['input_select.calendar_select'].state == 'calendar4') return "var(--calendar4-default-primary-color)";
-                              if (states['input_select.calendar_select'].state == 'Family') return "var(--family-default-primary-color)";
-                              return "gray";
-                            ]]]                
     cards: []
     icon: mdi:calendar-blank-multiple
     background:
